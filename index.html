@@ -1,0 +1,277 @@
+
+<script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+    new Crate({
+        server: '1213612571597475951',
+        channel: '1215311222757662760',
+        shard: 'https://emerald.widgetbot.io'
+    })
+</script>
+<img id='1' src='charmusiclogo.png' onclick='document.getElementById("frame").style.display = "block"; document.getElementById("2").style.display = "block"; document.getElementById("1").style.display = "none";' style='width: 50px; height: 50px; left: 10; top: 10; padding: 5px; position: fixed; background-color: blue; border-radius: 100000px;'>
+<img id='2' style="display: none; width: 50px; height: 50px; position: relative;" src='https://cdn3.iconfinder.com/data/icons/pyconic-icons-1-2/512/close-512.png' onclick='document.getElementById("frame").style.display = "none"; document.getElementById("1").style.display = "block"; document.getElementById("2").style.display = "none";'>
+<iframe style="border-radius: 30px; position: absolute; display: none" id='frame' height="600" width="400" src='https://charmusic.pages.dev/'></iframe>
+<script>
+  var pspeed = 10;
+  var shootCooldown = false;
+  if (localStorage.getItem("highScore") == null) {
+    localStorage.setItem("highScore", "0");
+  }
+  var cposx = screen.width / 2;
+  var cposy = screen.height / 2;
+  var bposx = screen.width / 2;
+  var bposy = screen.height / 2;
+  var movespeed = 10;
+  var movespeed2 = 0;
+  var mbposx = 0;
+  var left = false;
+  var up = false;
+  var down = false;
+  var right = false;
+  var allowShoot = true;
+  var tillScreen = 0;
+  var score = 0;
+  var stoploop = false;
+  document.onkeydown = function(event) {
+    if (event.keyCode === 27) {
+        if (document.getElementById('menu').style.display === 'none') {
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('menu').style.display = 'block';
+            if (document.getElementById('settings').style.display === 'block') {
+                document.getElementById('settings').style.display = 'none';
+            } else {
+                document.getElementById('title').innerText = 'Paused';
+                document.getElementById('playbutton').innerText = 'Resume';
+                document.getElementById('quitbutton').style.display = 'block';
+            }
+        } else if (document.getElementById('quitbutton').style.display === 'block') {
+            document.getElementById('main').style.display = 'block';
+            document.getElementById('menu').style.display = 'none';
+        }
+    }
+    if (event.keyCode === 13) {
+        if (document.getElementById('menu').style.display === 'none') {
+
+        } else if (document.getElementById('quitbutton').style.display === 'block') {
+            window.location.href = window.location.href;
+        }
+    }
+    switch (event.keyCode) {
+      case 32:
+            shoot();
+            break;
+      case 37:
+        left = true;
+        document.getElementById('p2').style.display = 'none';
+        document.getElementById('p').style.display = 'block';
+        break;
+      case 38:
+        up = true;
+        if (document.getElementById('p2').style.display === 'block') {
+          document.getElementById('p2').style.transform = 'rotate(-45deg)';
+        }
+        document.getElementById('p').style.transform = 'rotate(45deg)';
+        break;
+      case 39:
+        right = true;
+        document.getElementById('p2').style.display = 'block';
+        document.getElementById('p').style.display = 'none';
+        break;
+      case 40:
+        down = true;
+        if (document.getElementById('p2').style.display === 'block') {
+          document.getElementById('p2').style.transform = 'rotate(45deg)';
+        }
+        document.getElementById('p').style.transform = 'rotate(315deg)';
+        break;
+    }
+    if (left === true) {
+      cposx -= pspeed;
+    }
+    if (right === true) {
+      cposx += pspeed;
+    }
+    if (up === true) {
+      cposy -= pspeed;
+    }
+    if (down === true) {
+      cposy += pspeed;
+    }
+    document.getElementById('p').style.top = cposy;
+    document.getElementById('p').style.left = cposx;
+    document.getElementById('p2').style.top = cposy;
+    document.getElementById('p2').style.left = cposx;
+    bposx = cposx + 25;
+    bposy = cposy + 25;
+    document.getElementById('pos').innerText = 'X: ' + cposx + ' Y: ' + cposy;
+    if (cposx + 25 > parseInt(document.getElementById('e').style.left) && cposx + 25 < parseInt(document.getElementById('e').style.left) + document.getElementById('e').width) {
+            if (cposy + 25 > parseInt(document.getElementById('e').style.top) && cposy + 25 < parseInt(document.getElementById('e').style.top) + document.getElementById('e').height) {
+                document.getElementById('p').style.top = cposy;
+                document.getElementById('p').style.left = cposx;
+                document.getElementById('p2').style.top = cposy;
+                document.getElementById('p2').style.left = cposx;
+                window.location.href = 'gameover.html';
+                
+            }
+    }
+  };
+  document.onkeyup = function(event) {
+    switch (event.keyCode) {
+      case 37:
+        left = false;
+        break;
+      case 38:
+        up = false;
+        document.getElementById('p2').style.transform = 'rotate(0deg)';
+        document.getElementById('p').style.transform = 'rotate(0deg)';
+        break;
+      case 39:
+        right = false;
+        break;
+      case 40:
+        down = false;
+        document.getElementById('p2').style.transform = 'rotate(0deg)';
+        document.getElementById('p').style.transform = 'rotate(0deg)';
+        break;
+    }
+  };
+
+  function start() {
+    mbposx = bposx
+    mbposy = bposy
+    if (up === true) {
+      movespeed2 = -10
+    } else if (down === true) {
+      movespeed2 = 10
+    } else {
+      movespeed2 = 0
+    }
+    if (movespeed < 0) {
+      tillScreen = cposx / 10;
+    } else if (movespeed > 0) {
+      tillScreen = (screen.width - cposx) / 10;
+    }
+    for (let i = 0; i < tillScreen; i++) {
+      setTimeout(function() {
+        if (stoploop === true) {
+          clearTimeout(t);
+          allowShoot = true;
+          stoploop = false
+        } else {
+          mbposx += movespeed;
+          document.getElementById('b').style.left = mbposx;
+          mbposy += movespeed2;
+          document.getElementById('b').style.top = mbposy;
+          if (mbposx > parseInt(document.getElementById('e').style.left) && mbposx < parseInt(document.getElementById('e').style.left) + document.getElementById('e').width) {
+            if (mbposy + 10 > parseInt(document.getElementById('e').style.top) && mbposy < parseInt(document.getElementById('e').style.top) + document.getElementById('e').height) {
+              // collides with bullet
+              // increases score
+              score += 1;
+              updateHighScore();
+              // stops bullet loop
+              stoploop = true;
+              // updates score
+              document.getElementById('score').innerText = 'Score: ' + score;
+              // moves enemy
+              document.getElementById('e').style.top = random(0, screen.height - 50);
+              document.getElementById('e').style.left = random(0, screen.width - 50);
+              // hides bullet and moves out of view
+              document.getElementById('b').style.display = 'none';
+              document.getElementById('b').style.top = 18498985757;
+            }
+          }
+        }
+      }, i * 50)
+    }
+    // clear bullet loop
+    setTimeout(function() {
+      allowShoot = true;
+      stoploop = false;
+    }, tillScreen * 50)
+  }
+
+  function shoot() {
+    if (allowShoot === true) {
+      if (document.getElementById('p').style.display === 'block') {
+        movespeed = -10
+      } else {
+        movespeed = 10
+      }
+      document.getElementById('b').style.left = bposx;
+      document.getElementById('b').style.top = bposy;
+      document.getElementById('b').style.display = 'block'
+      start()
+      allowShoot = shootCooldown;
+    }
+  }
+
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function spawnEnemy() {
+    document.getElementById('e').style.top = random(0, screen.height - 50)
+    document.getElementById('e').style.left = random(0, screen.width - 50)
+    document.getElementById('e').style.display = 'block';
+  }
+
+  function updateHighScore() {
+    var currHighScore = parseInt(localStorage.getItem("highScore"));
+    if (parseInt(currHighScore) < score) {
+      localStorage.setItem("highScore", score.toString());
+      document.getElementById("highScore").innerHTML = localStorage.getItem("highScore").toString();
+    }
+  }
+  
+function settings() {
+    document.getElementById('settings').style.display = 'block';
+    document.getElementById('menu').style.display = 'none';
+}
+</script>
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #262626;
+  color: white;
+  margin: 0;
+}
+
+div#scoreArea {
+  display: flex;
+  justify-content: center;
+}
+</style>
+<div id='main' style='display: none;'>
+<body onclick="shoot();" onload="document.getElementById('highScore').innerHTML = localStorage.getItem('highScore').toString();">
+  <!-- DO NOT TOUCH THIS ITS MAGIC -->
+  <div id="scoreArea">
+    <h3 id='score' style="order: 1; margin-right: 5px;">Score: 0</h3>
+    <span style="order: 2; margin-top: 1.3%;"> | </span>
+    <h3 style="order: 3; margin-left: 5px;">High Score: <span id="highScore">0</span></h3>
+  </div>
+  <hr>
+  <img id='p' style='display: none; position: fixed; top: 50%; left: 50%; width: 50px; height: 50px;' src='char.png'>
+  <img id='p2' style='position: fixed; top: 50%; left: 50%; width: 50px; height: 50px;' src='char2.png'>
+  <img id='b' style='background-color: black; width: 5px; height: 3px; font-size: 20; display: none; position: fixed; top: 0; left: 0;'>
+  <img style="position: fixed; border: -1px solid black; display: none; width: 50px; height: 50px; top: 50; left: 50;" src='enemy.png' id='e'>
+  <p id='pos' style="display: none; position: fixed; top: 0; left: 0;">X: 0 Y: 0</p>
+</body>
+</div>
+<div id='menu'>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <center><h1 id='title' style='font-size: 90px; text-shadow: 0 0 7px #DFFF00;'>DuckShot</h1></center>
+    <center><h2 onclick="spawnEnemy(); document.getElementById('menu').style.display = 'none'; document.getElementById('main').style.display = 'block';" style="box-shadow: 0 0 5px #DFFF00; background-color: gray; border: 2px solid black; border-radius: 10px; width: 100px; height: 30px;" id='playbutton'>Play</h2></center>
+    <center><h2 onclick="settings();" style=" box-shadow: 0 0 5px #DFFF00; background-color: gray; border: 2px solid black; border-radius: 10px; width: 100px; height: 30px;">Settings</h2></center>
+    <center><h2 style="box-shadow: 0 0 5px #DFFF00; background-color: gray; border: 2px solid black; display: none; border-radius: 10px; width: 100px; height: 30px;" onclick="window.location.href = window.location.href" id='quitbutton'>Quit</h2></center>
+</div>
+<div style='display: none; border: 0px solid white;' id='settings'>
+<!-- settings code goes below -->
+<button style='border-radius: 30px; padding: 10; background-color: red;' onclick='if (prompt("What is the password") === process.env.UNLOCKPASS) {}'>Unlock Game (Devs only)</button>
+</div>
+<!-- ADD TRAILER VIDEO HERE -->
