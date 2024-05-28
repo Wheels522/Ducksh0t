@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
+<title>GAME OVER</title>
+<style>
+@keyframes shaky {
+  1% {rotate: 0deg;}
+  25% {rotate: 15deg;}
+  50% {rotate: 0deg;}
+  75% {rotate: -15deg;}
+  100% {rotate: 0deg;}
+  
+}
+body {
+    background-color: red;
+    font-family: sans-serif;
+}
+
+h1 {
+    font-size: 1000%;
+    font-family: "Jaro", sans-serif;
+    font-weight: 300;
+    animation: shaky 5s linear infinite;
+}
+
+h1::before {
+  content: "🦆GAME";
+}
+
+h1::after {
+  content: " OVER🦆";
+}
+
+h4 {
+    top: 40%;
+    cursor: pointer;
+}
+h4::before {
+    content: "Try Again?";
+}
+</style>
+</head>
+<body>
+<center><h1 id='main'></h1></center>
+<center><h4 onclick='window.location.href = "index.html";'></h4></center>
+</body>
+</html>
