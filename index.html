@@ -1,4 +1,3 @@
-
 <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
     new Crate({
         server: '1213612571597475951',
@@ -271,7 +270,43 @@ div#scoreArea {
     <center><h2 style="box-shadow: 0 0 5px #DFFF00; background-color: gray; border: 2px solid black; display: none; border-radius: 10px; width: 100px; height: 30px;" onclick="window.location.href = window.location.href" id='quitbutton'>Quit</h2></center>
 </div>
 <div style='display: none; border: 0px solid white;' id='settings'>
-<!-- settings code goes below -->
-<button style='border-radius: 30px; padding: 10; background-color: red;' onclick='if (prompt("What is the password") === process.env.UNLOCKPASS) {}'>Unlock Game (Devs only)</button>
+<!-- settings code goes below --!
+<button class="unlock-button" style="border-radius: 30px; padding: 10px; background-color: red;" onclick="unlockGame()">Unlock Game (Devs only)</button>
+
+<script>
+    // Simulating environment variable for the password
+    const UNLOCKPASS = 'cornbits22';
+
+    function unlockGame() {
+        const userInput = prompt("What is the password?");
+        if (userInput === UNLOCKPASS) {
+            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('message').textContent = "Admin panel unlocked.";
+        } else {
+            document.getElementById('message').textContent = "Incorrect password. Access denied.";
+        }
+    }
+
+    function applySettings() {
+        const cooldown = document.getElementById('cooldown').value;
+        const speed = document.getElementById('speed').value;
+
+        enshootCooldown(cooldown);
+        updatePlayerSpeed(speed);
+
+        document.getElementById('message').textContent = "Settings applied. Cooldown: " + cooldown + " seconds, Speed: " + speed;
+    }
+
+    // Example functions to be called when the game is unlocked
+    function enshootCooldown(cooldown) {
+        console.log('Shoot cooldown set to ' + cooldown + ' seconds.');
+        // Implementation for setting shooting cooldown
+    }
+
+    function updatePlayerSpeed(speed) {
+        console.log('Player speed set to ' + speed + '.');
+        // Implementation for updating player speed
+    }
+</script>
 </div>
 <!-- ADD TRAILER VIDEO HERE -->
